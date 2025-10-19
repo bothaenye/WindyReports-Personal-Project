@@ -1,0 +1,27 @@
+name: Daily Windy Data Fetch
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # once daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install requests pandas
+      - name: Run script
+        run: python windy_forecast.py
+      - name: Commit results
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add windy_forecast.csv
+          git commit -m "Update precipitation data $(date)"
+          git push
