@@ -42,7 +42,7 @@ def main():
     with open("windy_response.json", "w") as f:
         json.dump(data, f, indent=2)    
         
-		
+
     # Check for API errors first
     if "message" in data and "error" in data:
         print(f"API error: {data['message']} ({data['error']})")
@@ -56,12 +56,13 @@ def main():
         df.to_csv("windy_forecast_$(data).csv", index=False)
         print("Saved as windy_forecast.csv")
         print(df["precip"])
-        
+
+    with open("precip.json", "r") as l:
+            old_total = json.load(l).get("total_precip", 0) 
 
     with open("precip.json", "w") as k:
         total_precip = sum(df["precip"])
-        old_total = json.load(k)
-        json.dump(old_total + total_precip, k, indent=2)
+        json.dump({"total_precip" : old_total + total_precip}, k, indent=2)
 
 
 
