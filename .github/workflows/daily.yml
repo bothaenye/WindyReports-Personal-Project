@@ -22,6 +22,6 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add windy_forecast_$(date).csv
-          git commit -m "Update precipitation data $(date)"
+          git add windy_forecast_${$(date -u +"%Y-%m-%d_%H-%M-%S")}.csv
+          git commit -m "Update precipitation data ${$(date -u +"%Y-%m-%d_%H-%M-%S")}"
           git push
