@@ -17,11 +17,11 @@ jobs:
       - name: Install dependencies
         run: pip install requests pandas
       - name: Run script
-        run: python windy_forecast.py
+        run: python windyAPI.py
       - name: Commit results
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add windy_forecast.csv
+          git add windy_forecast_$(date).csv
           git commit -m "Update precipitation data $(date)"
           git push
