@@ -19,7 +19,7 @@ def build_dataset(data):
         df["temp_C"] = df["temp_K"] - 273.15
         return df
     except KeyError as e:
-        print(f"⚠️ Missing expected data in response: {e}")
+        print(f"Missing expected data in response: {e}")
         return None
 
 def main():
@@ -36,24 +36,33 @@ def main():
 
     response = requests.post(url, headers=headers, data=json.dumps(payload))
     data = response.json()
+    
 
     # Save JSON for debugging
     with open("windy_response.json", "w") as f:
         json.dump(data, f, indent=2)
 
+    with open("precip.json", "w") as k:
+        total_precip = sum(df["precip"])
+        old_total = json.load(k)
+        json.dump(old_total + total_precip, k, indent=2)
+
+    
+
     # Check for API errors first
     if "message" in data and "error" in data:
-        print(f"⚠️ API error: {data['message']} ({data['error']})")
+        print(f"API error: {data['message']} ({data['error']})")
         return
 
     # Build dataset
     df = build_dataset(data)
     if df is not None:
-        print("✅ Dataset created:")
+        print("Dataset created:")
         print(df.head())
-        df.to_csv("windy_forecast.csv", index=False)
-        print("💾 Saved as windy_forecast.csv")
+        df.to_csv("windy_forecast_$(data).csv", index=False)
+        print("Saved as windy_forecast.csv")
         print(df["precip"])
+
 
 if __name__ == "__main__":
     main()
