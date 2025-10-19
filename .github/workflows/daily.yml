@@ -2,7 +2,7 @@ name: Daily Windy Data Fetch
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # once daily at midnight UTC
+    - cron: "0 */3 * * *"  # every 3 hours, on the hour
   workflow_dispatch:
 
 jobs:
