@@ -53,7 +53,8 @@ def main():
     if df is not None:
         print("Dataset created:")
         print(df.head())
-        df.to_csv("windy_forecast_$(data).csv", index=False)
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+        df.to_csv(f"windy_forecast_{timestamp}.csv", index=False)
         print("Saved as windy_forecast.csv")
         print(df["precip"])
 
