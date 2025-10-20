@@ -62,9 +62,11 @@ def main():
         print(df["precip"])
 
     with open("precip.json", "r") as l:
+            obj = json.load(l)
             old_total = json.load(l).get("total_precip", 0) 
 
     with open("precip.json", "w") as k:
+        //adapt to add new object for each month
         total_precip = sum(df["precip"])
         json.dump({"total_precip" : old_total + total_precip}, k, indent=2)
 
