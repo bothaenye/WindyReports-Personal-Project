@@ -1,7 +1,7 @@
 import requests
 import json
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 #ensure u r in mircrosoft interpreter 3.11.9
 def build_dataset(data):
     try:
@@ -51,7 +51,10 @@ def main():
     # Build dataset
     df = build_dataset(data)
     if df is not None:
+        end_time = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        start_time = end_time - timedelta(days=7)
         print("Dataset created:")
+        df = df[(df["time"] >= start_time) & (df["time"] < end_time)]
         print(df.head())
         timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
         df.to_csv(f"windy_forecast_{timestamp}.csv", index=False)
