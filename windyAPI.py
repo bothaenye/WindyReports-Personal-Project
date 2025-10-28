@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 #ensure u r in mircrosoft interpreter 3.11.9
 def build_dataset(data):
     try:
-        times = [datetime.utcfromtimestamp(ts / 1000) for ts in data["ts"]]
+        times = [datetime.utcfromtimestamp(ts / 1000) for ts in data["time"]]
         df = pd.DataFrame({
             "time": times,
             "wind_u": data["wind_u-surface"],
