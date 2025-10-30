@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 #ensure u r in mircrosoft interpreter 3.11.9
 def build_dataset(data):
     try:
-        times = [datetime.utcfromtimestamp(ts / 1000) for ts in data["time"]]
+        # 💡 FIX: Use pd.to_datetime with unit='ms' to handle timestamps directly.
         df = pd.DataFrame({
-            "time": times,
+            "time": pd.to_datetime(data["time"], unit='ms'),
             "wind_u": data["wind_u-surface"],
             "wind_v": data["wind_v-surface"],
             "temp_K": data["temp-surface"],
@@ -51,9 +51,8 @@ def main():
     # Build dataset
     df = build_dataset(data)
     if df is not None:
-        end_time = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-        start_time = end_time - timedelta(days=7)
-        print("Dataset created:")
+        start_time = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        end_time = start_time + timedelta(days=7)
         df = df[(df["time"] >= start_time) & (df["time"] < end_time)]
         print(df.head())
         timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
