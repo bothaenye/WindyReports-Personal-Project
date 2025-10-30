@@ -3,9 +3,9 @@ import json
 import pandas as pd
 from datetime import datetime, timedelta
 #ensure u r in mircrosoft interpreter 3.11.9
+
 def build_dataset(data):
     try:
-        # 💡 FIX: Use pd.to_datetime with unit='ms' to handle timestamps directly.
         df = pd.DataFrame({
             "time": pd.to_datetime(data["time"], unit='ms'),
             "wind_u": data["wind_u-surface"],
@@ -31,45 +31,44 @@ def main():
         "model": "gfs",
         "parameters": ["wind", "temp", "precip", "lclouds", "mclouds", "hclouds"],
         "levels": ["surface"],
-        "key": "U9oNWaYnBYGgVjNSE53kA2YjRd48nNwX"  # <-- Replace with a valid API key
+        "key": "U9oNWaYnBYGgVjNSE53kA2YjRd48nNwX"  
     }
 
     response = requests.post(url, headers=headers, data=json.dumps(payload))
     data = response.json()
     
-
-    # Save JSON for debugging
     with open("windy_response.json", "w") as f:
-        json.dump(data, f, indent=2)    
+        json.dump(data, f, indent=2)     
         
-
-    # Check for API errors first
     if "message" in data and "error" in data:
         print(f"API error: {data['message']} ({data['error']})")
         return
 
-    # Build dataset
     df = build_dataset(data)
     if df is not None:
         start_time = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         end_time = start_time + timedelta(days=7)
+        
+        print("Dataset created:")
         df = df[(df["time"] >= start_time) & (df["time"] < end_time)]
+        
         print(df.head())
+        
         timestamp = datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
         df.to_csv(f"windy_forecast_{timestamp}.csv", index=False)
         print("Saved as windy_forecast.csv")
         print(df["precip"])
 
-    with open("precip.json", "r") as l:
-            obj = json.load(l)
-            old_total = obj.get("total_precip", 0) 
-
-    with open("precip.json", "w") as k:
-        #adapt to add new object for each month
-        total_precip = sum(df["precip"])
-        json.dump({"total_precip" : old_total + total_precip}, k, indent=2)
-
-
+        try:
+            with open("precip.json", "r") as l:
+                obj = json.load(l)
+                old_total = obj.get("total_precip", 0) 
+        except FileNotFoundError:
+             old_total = 0 
+            
+        with open("precip.json", "w") as k:
+            total_precip = sum(df["precip"])
+            json.dump({"total_precip" : old_total + total_precip}, k, indent=2)
 
 if __name__ == "__main__":
     main()
