@@ -64,11 +64,19 @@ def main():
     with open("precip.json", "r") as l:
             obj = json.load(l)
             old_total = obj.get("total_precip", 0) 
+            
+	
+    try:
+       with open("precip.json", "r") as l:
+           obj = json.load(l)
+           old_total = obj.get("total_precip", 0)
+           total_precip = sum(df["precip"])
+           obj["total_precip"] = old_total + total_precip
+           with open("precip.json", "w") as k:
+                json.dump(obj, k, indent=2)
 
-    with open("precip.json", "w") as k:
-        #adapt to add new object for each month
-        total_precip = sum(df["precip"])
-        json.dump({"total_precip" : old_total + total_precip}, k, indent=2)
+    except FileNotFoundError:
+        obj = {}
 
 
 
