@@ -16,8 +16,8 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: pip install requests pandas
-      - name: Run weatherHistoryAPI script
-        run: python weatherHistoryAPI.py
+      - name: Run weatherHistoryApi script
+        run: python weatherHistoryApi.py
       - name: Commit results
         run: |
           git config --global user.name "github-actions"
