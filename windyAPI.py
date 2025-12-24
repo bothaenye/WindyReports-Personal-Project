@@ -1,6 +1,6 @@
-import requests
+import requests # type: ignore
 import json
-import pandas as pd
+import pandas as pd # type: ignore
 from datetime import datetime, timedelta
 #ensure u r in mircrosoft interpreter 3.11.9
 def build_dataset(data):
