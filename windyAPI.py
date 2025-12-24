@@ -31,19 +31,17 @@ def main():
         "model": "gfs",
         "parameters": ["wind", "temp", "precip", "lclouds", "mclouds", "hclouds"],
         "levels": ["surface"],
-        "key": "U9oNWaYnBYGgVjNSE53kA2YjRd48nNwX"  # <-- Replace with a valid API key
+        "key": "U9oNWaYnBYGgVjNSE53kA2YjRd48nNwX"
     }
 
     response = requests.post(url, headers=headers, data=json.dumps(payload))
     data = response.json()
     
 
-    # Save JSON for debugging
     with open("windy_response.json", "w") as f:
         json.dump(data, f, indent=2)    
         
 
-    # Check for API errors first
     if "message" in data and "error" in data:
         print(f"API error: {data['message']} ({data['error']})")
         return
@@ -52,7 +50,7 @@ def main():
     df = build_dataset(data)
     if df is not None:
         future_date = datetime.utcnow() + timedelta(days=7)
-        date_str = future_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        date_str = future_date.strftime("%Y-%m-%dT%H-%M-%SZ")
         now = datetime.utcnow()
         
         print("Dataset created:")
