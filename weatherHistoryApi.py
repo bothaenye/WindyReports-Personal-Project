@@ -44,16 +44,17 @@ for day_data in all_data:
 print("total precipitation for the week: ", total_true_precip, " mm")
 
 filename = "precip.json"
-try:
-    with open(filename, "r") as f:
-        data = json.load(f)  # data is now a dict
-        old_true = data.get("total_true_precip", 0) 
-        data["total_true_precip"] = total_true_precip + old_true
-        with open(filename, "w") as f:
-            json.dump(data, f, indent=2)
 
+with open(filename, "r") as f:
+    data = json.load(f)
 
-except FileNotFoundError:
-    data = {}  # start with empty dict if file doesn't exist
-    
+# Update only total_true_precip
+old_value = data.get("total_true_precip", 0)
+data["total_true_precip"] = old_value + total_true_precip
+
+# Write back
+with open(filename, "w") as f:
+    json.dump(data, f, indent=2)
+
+print("Updated total_true_precip:", data["total_true_precip"])
 	
