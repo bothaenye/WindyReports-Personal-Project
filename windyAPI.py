@@ -70,8 +70,10 @@ def main():
        with open("precip.json", "r") as l:
            obj = json.load(l)
            old_total = obj.get("total_precip", 0)
+           new_total = obj.get("total_precip_future", 0)
            total_precip = sum(df["precip"])
-           obj["total_precip"] = old_total + total_precip
+           obj["total_precip"] = new_total
+           obj["total_precip_future"] = old_total + total_precip
            with open("precip.json", "w") as k:
                 json.dump(obj, k, indent=2)
 
