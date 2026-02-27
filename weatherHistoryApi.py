@@ -2,7 +2,7 @@ import requests
 import datetime
 import json
 
-API_KEY = "YOUR_API_KEY"
+API_KEY = "e5314a3a5d5249d0aff223149252412"
 LAT = 48.981917
 LON = -123.545861
 LOCATION = f"{LAT},{LON}"
@@ -51,3 +51,4 @@ with open(FILENAME, "w") as f:
     json.dump(obj, f, indent=2)
 
 print("Updated cumulative precipitation:", obj["total_true_precip"])
+
