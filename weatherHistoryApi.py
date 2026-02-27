@@ -1,17 +1,11 @@
-import os
-import requests
+import requests # type: ignore
 import datetime
 import json
 
-API_KEY = os.getenv("WEATHER_API_KEY")
-if not API_KEY:
-    raise ValueError("Missing WEATHER_API_KEY environment variable")
-
-LAT = 48.981917
-LON = -123.545861
+API_KEY = "e5314a3a5d5249d0aff223149252412"
+LAT = 43.6532 
+LON = -123.545861  
 LOCATION = f"{LAT},{LON}"
-FILENAME = "precip.json"
-
 
 def fetch_history(date):
     url = "https://api.weatherapi.com/v1/history.json"
@@ -21,33 +15,46 @@ def fetch_history(date):
         "dt": date
     }
     response = requests.get(url, params=params)
-    response.raise_for_status()
+    response.raise_for_status()    
     return response.json()
 
-
+# Get last 7 days
 today = datetime.date.today()
+last_week_dates = [(today - datetime.timedelta(days=i)).isoformat()
+                    for i in range(1, 8)]
+
+all_data = []
+
+for day in last_week_dates:
+    print(f"Fetching {day}...")
+    data = fetch_history(day)
+    all_data.append(data)
+
+print("Finished fetching all 7 days!")
+
 total_true_precip = 0
 
-for i in range(1, 8):
-    date = (today - datetime.timedelta(days=i)).isoformat()
-    print(f"Fetching {date}...")
-    data = fetch_history(date)
-    forecast_day = data["forecast"]["forecastday"][0]
-    total_true_precip += forecast_day["day"]["totalprecip_mm"]
+for day_data in all_data:
+    forecast_day = day_data["forecast"]["forecastday"][0]
+    date = forecast_day["date"]
+    total_precip = forecast_day["day"]["totalprecip_mm"]
+    
+    total_true_precip += total_precip
+    
+print("total precipitation for the week: ", total_true_precip, " mm")
 
-print("Total precipitation for the week:", total_true_precip, "mm")
+filename = "precip.json"
 
-# Load existing cumulative value
-try:
-    with open(FILENAME, "r") as f:
-        obj = json.load(f)
-except FileNotFoundError:
-    obj = {}
+with open(filename, "r") as f:
+    data = json.load(f)
 
-old_value = obj.get("total_true_precip", 0)
-obj["total_true_precip"] = old_value + total_true_precip
+# Update only total_true_precip
+old_value = data.get("total_true_precip", 0)
+data["total_true_precip"] = old_value + total_true_precip
 
-with open(FILENAME, "w") as f:
-    json.dump(obj, f, indent=2)
+# Write back
+with open(filename, "w") as f:
+    json.dump(data, f, indent=2)
 
-print("Updated cumulative precipitation:", obj["total_true_precip"])
+print("Updated total_true_precip:", data["total_true_precip"])
+	
