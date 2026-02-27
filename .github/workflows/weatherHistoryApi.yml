@@ -19,7 +19,7 @@ jobs:
       - name: Run weatherHistoryApi script
         run: python weatherHistoryApi.py
         env:
-            WEATHER_API_KEY: ${{ secrets.e5314a3a5d5249d0aff223149252412 }}
+            WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
       - name: Commit results
         run: |
           git config --global user.name "github-actions"
