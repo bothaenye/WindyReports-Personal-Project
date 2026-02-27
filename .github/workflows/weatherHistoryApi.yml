@@ -18,6 +18,8 @@ jobs:
         run: pip install requests pandas
       - name: Run weatherHistoryApi script
         run: python weatherHistoryApi.py
+        env:
+            WEATHER_API_KEY: ${{ secrets.e5314a3a5d5249d0aff223149252412 }}
       - name: Commit results
         run: |
           git config --global user.name "github-actions"
