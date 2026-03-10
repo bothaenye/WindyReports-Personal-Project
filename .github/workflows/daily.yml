@@ -2,7 +2,7 @@ name: Daily Windy Data Fetch
 
 on:
   schedule:
-    - cron: "0 0 * * 2"  # every 3 hours, on the hour
+    - cron: "0 */3 * * *"  # every 3 hours, on the hour
   workflow_dispatch:
 
 jobs:
@@ -25,6 +25,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add precip.json windy_forecast_*.csv || true
+          git pull --rebase
+          git add precip.json windy_response.json || true
           git commit -m "Update precipitation data $(date -u +"%Y-%m-%d_%H-%M-%S")" || true
           git push
