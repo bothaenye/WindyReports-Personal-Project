@@ -25,7 +25,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git pull --rebase
           git add precip.json windy_response.json || true
           git commit -m "Update precipitation data $(date -u +"%Y-%m-%d_%H-%M-%S")" || true
+          git pull --rebase
           git push
