@@ -1,12 +1,32 @@
 import requests # type: ignore
 import json
+import argparse
+from datetime import datetime, timezone
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start-date', required=True)
+    parser.add_argument('--end-date', required=True)
+    args = parser.parse_args()
+    
+    start_date = datetime.fromisoformat(args.start_date).date()
+    end_date = datetime.fromisoformat(args.end_date).date()
+    days = (end_date - start_date).days + 1
+    
+    if days != 7:
+        print("Only 7 days supported")
+        return
+    
+    today = datetime.now(timezone.utc).date()
+    if start_date != today:
+        print("Forecast only for today")
+        return
+    
     url = "https://api.weatherapi.com/v1/forecast.json"
     params = {
         "key": "e5314a3a5d5249d0aff223149252412",
         "q": "48.981917,-123.545861",
-        "days": 7
+        "days": days
     }
 
     response = requests.get(url, params=params)
@@ -30,6 +50,20 @@ def main():
         total_precip += day_data["day"]["totalprecip_mm"]
 
     print(f"Total forecast precipitation for next 7 days: {total_precip} mm")
+
+    forecasts_file = "forecasts.json"
+    try:
+        with open(forecasts_file, "r") as f:
+            forecasts = json.load(f)
+    except FileNotFoundError:
+        forecasts = {}
+    
+    key = f"{start_date.isoformat()}-{end_date.isoformat()}"
+    forecasts[key] = total_precip
+    with open(forecasts_file, "w") as f:
+        json.dump(forecasts, f, indent=2)
+    
+    print(f"Saved forecast for {key}: {total_precip}")
 
     try:
         with open("precip.json", "r") as f:

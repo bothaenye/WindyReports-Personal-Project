@@ -2,7 +2,7 @@ name: Daily Windy Data Fetch
 
 on:
   schedule:
-    - cron: "0 */3 * * *"  # every 3 hours, on the hour
+    - cron: "0 0 * * 2"  # every Tuesday at 00:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: pip install requests pandas
       - name: Run script
-        run: python windyAPI.py
+        run: python windyAPI.py --start-date $(date +%Y-%m-%d) --end-date $(date -d '+6 days' +%Y-%m-%d)
       - name: Commit results
         run: |
           git config --global user.name "github-actions"

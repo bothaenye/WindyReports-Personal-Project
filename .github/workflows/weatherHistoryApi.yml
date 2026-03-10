@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: pip install requests pandas
       - name: Run weatherHistoryApi script
-        run: python weatherHistoryApi.py
+        run: python weatherHistoryApi.py --start-date $(date -d '7 days ago' +%Y-%m-%d) --end-date $(date -d '1 day ago' +%Y-%m-%d)
       - name: Commit results
         run: |
           git config --global user.name "github-actions"
