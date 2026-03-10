@@ -3,7 +3,7 @@ import datetime
 import json
 
 API_KEY = "e5314a3a5d5249d0aff223149252412"
-LAT = 43.6532 
+LAT = 48.981917 
 LON = -123.545861  
 LOCATION = f"{LAT},{LON}"
 
@@ -19,9 +19,9 @@ def fetch_history(date):
     return response.json()
 
 # Get last 7 days
-today = datetime.date.today()
+today = datetime.datetime.now(datetime.timezone.utc).date()
 last_week_dates = [(today - datetime.timedelta(days=i)).isoformat()
-                    for i in range(1, 8)]
+                    for i in range(0, 7)]
 
 all_data = []
 
