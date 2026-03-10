@@ -22,7 +22,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add precip.json || true
+          git add precip.json forecasts.json || true
           git commit -m "Update Weather History $(date -u +"%Y-%m-%d_%H-%M-%S")" || true
           git pull --rebase
           git push
