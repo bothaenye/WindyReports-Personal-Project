@@ -71,15 +71,13 @@ filename = "precip.json"
 with open(filename, "r") as f:
     data = json.load(f)
 
-# Store true precipitation for this date range (do not accumulate across runs)
-range_key = f"{start_date.isoformat()}-{end_date.isoformat()}"
-data["true_precip_range"] = range_key
-data["total_true_precip"] = total_true_precip
+# Update only total_true_precip
+old_value = data.get("total_true_precip", 0)
+data["total_true_precip"] = old_value + total_true_precip
 
 # Write back
 with open(filename, "w") as f:
     json.dump(data, f, indent=2)
 
-print("Updated true_precip_range:", data["true_precip_range"])
 print("Updated total_true_precip:", data["total_true_precip"])
 	

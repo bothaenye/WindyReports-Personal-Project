@@ -71,14 +71,13 @@ def main():
     except FileNotFoundError:
         obj = {}
 
-    obj["forecast_range"] = key
     obj["total_precip_future"] = total_precip
 
     with open("precip.json", "w") as f:
         json.dump(obj, f, indent=2)
 
-    print("Updated forecast_range:", obj["forecast_range"])
     print("Updated total_precip_future:", total_precip)
+
 
 
 if __name__ == "__main__":
