@@ -71,12 +71,13 @@ def main():
     except FileNotFoundError:
         obj = {}
 
-    obj["total_precip_future"] = total_precip
+    old_future = obj.get("total_precip_future", 0)
+    obj["total_precip_future"] = old_future + total_precip
 
     with open("precip.json", "w") as f:
         json.dump(obj, f, indent=2)
 
-    print("Updated total_precip_future:", total_precip)
+    print("Updated total_precip_future:", obj["total_precip_future"])
 
 
 
